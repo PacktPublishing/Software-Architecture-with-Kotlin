@@ -1,0 +1,45 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}"
+    }
+}
+
+apply plugin: "application"
+
+mainClassName = "clientserver.ClientServerKt"
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: "kotlin"
+
+compileKotlin.kotlinOptions.jvmTarget = "11"
+compileTestKotlin.kotlinOptions.jvmTarget = "11"
+compileTestKotlin.kotlinOptions.freeCompilerArgs += "-Xjvm-default=all"
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+test {
+    useJUnitPlatform()
+}
+
+dependencies {
+    implementation("org.http4k:http4k-client-okhttp:${http4kVersion}")
+    implementation("org.http4k:http4k-core:${http4kVersion}")
+    implementation("org.http4k:http4k-format-jackson:${http4kVersion}")
+    implementation("org.http4k:http4k-server-undertow:${http4kVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
+    testImplementation("org.http4k:http4k-testing-approval:${http4kVersion}")
+    testImplementation("org.http4k:http4k-testing-hamkrest:${http4kVersion}")
+    testImplementation("org.http4k:http4k-testing-kotest:${http4kVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+}
+
