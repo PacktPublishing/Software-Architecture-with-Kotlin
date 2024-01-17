@@ -10,7 +10,6 @@ import org.http4k.core.Method.GET
 import org.http4k.core.Method.PATCH
 import org.http4k.core.Method.PUT
 import org.http4k.core.Request
-import org.http4k.core.Response
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.DebuggingFilters.PrintResponse
@@ -21,10 +20,6 @@ fun main() {
     val client: HttpHandler = OkHttp()
 
     val printingClient: HttpHandler = PrintResponse().then(client)
-
-    val response: Response = printingClient(Request(GET, "http://localhost:9000/ping"))
-
-    println(response.bodyString())
 
     val initialContractDraftedByHouseholdA =
         ServiceContract(
@@ -40,6 +35,7 @@ fun main() {
                 initialContractDraftedByHouseholdA.asJsonObject(),
         ),
     )
+    println("Household A submitted the initial service contract of ID ${initialContractDraftedByHouseholdA.id}")
 
     val contractReceivedByB =
         serviceContractLens(
@@ -47,6 +43,7 @@ fun main() {
                 Request(GET, "http://localhost:9000/contracts/1?household=B"),
             ),
         )
+    println("Household B received the initial service contract of ID ${contractReceivedByB.id}")
 
     val contractRevisedByB =
         contractReceivedByB.copy(
@@ -60,6 +57,7 @@ fun main() {
                 contractRevisedByB.asJsonObject(),
         ),
     )
+    println("Household B submitted the revised service contract of ID ${contractRevisedByB.id}")
 
     val contractReceivedByA =
         serviceContractLens(
@@ -67,6 +65,7 @@ fun main() {
                 Request(GET, "http://localhost:9000/contracts/1?household=A"),
             ),
         )
+    println("Household A received the revised service contract of ID ${contractReceivedByA.id}")
 
     printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").header("household", "A"))
     println("Household A agreed with the service contract of ID ${contractReceivedByA.id}")
@@ -77,9 +76,17 @@ fun main() {
                 Request(GET, "http://localhost:9000/contracts/1?household=B"),
             ),
         )
+    println("Household B received the revised service contract of ID ${revisedContractReceivedByB.id}")
 
     if (revisedContractReceivedByB.partyA.agreedAt != null) {
         printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").header("household", "B"))
         println("Household B agreed with the service contract of ID ${revisedContractReceivedByB.id}")
     }
+    val contractAgreedByBoth =
+        serviceContractLens(
+            printingClient(
+                Request(GET, "http://localhost:9000/contracts/1?household=A"),
+            ),
+        )
+    println("Household A received the agreed service contract: $contractAgreedByBoth")
 }

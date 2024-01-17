@@ -32,9 +32,6 @@ val householdQuery = Query.string().required("household")
 
 val app: HttpHandler =
     routes(
-        "/ping" bind GET to {
-            Response(OK).body("pong")
-        },
         "/contracts" bind GET to { request ->
             val household = householdQuery(request)
 
