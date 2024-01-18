@@ -8,18 +8,16 @@ import org.http4k.core.Method
 import org.http4k.core.Method.GET
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.BAD_REQUEST
+import org.http4k.core.Status.Companion.CREATED
 import org.http4k.core.Status.Companion.FORBIDDEN
 import org.http4k.core.Status.Companion.NOT_FOUND
+import org.http4k.core.Status.Companion.NO_CONTENT
 import org.http4k.core.Status.Companion.OK
 import org.http4k.core.then
 import org.http4k.core.with
 import org.http4k.filter.DebuggingFilters.PrintRequest
-import org.http4k.format.Jackson.asJsonObject
 import org.http4k.format.Jackson.auto
-import org.http4k.format.Jackson.json
 import org.http4k.lens.Header
-import org.http4k.lens.Query
-import org.http4k.lens.string
 import org.http4k.routing.bind
 import org.http4k.routing.path
 import org.http4k.routing.routes
@@ -28,22 +26,11 @@ import org.http4k.server.asServer
 import java.time.Instant
 
 val householdHeader = Header.required("household")
-val householdQuery = Query.string().required("household")
 
 val app: HttpHandler =
     routes(
-        "/contracts" bind GET to { request ->
-            val household = householdQuery(request)
-
-            println("Getting service contracts for household $household")
-            val relatedContracts =
-                contracts
-                    .values
-                    .filter { it.partyA.householdName == household || it.partyB.householdName == household }
-            Response(OK).with(Body.json().toLens() of relatedContracts.asJsonObject())
-        },
         "/contracts/{id}" bind GET to { request ->
-            val household = householdQuery(request)
+            val household = householdHeader(request)
             val id = request.path("id")?.toInt()
             val contract = id?.let { contracts[it] }
 
@@ -68,10 +55,12 @@ val app: HttpHandler =
             } else if (contract.partyA.householdName != household && contract.partyB.householdName != household) {
                 Response(FORBIDDEN).body("Household $household is not allowed to update the service contract of ID $id")
             } else {
+                val status = if (contracts[contract.id] == null) CREATED else OK
+
                 contracts[contract.id] = contract
 
                 println("Number of service contracts stored = ${contracts.size}")
-                Response(OK).with(serviceContractLens of contract)
+                Response(status).with(serviceContractLens of contract)
             }
         },
         "/contracts/{id}/agreedAt" bind Method.PATCH to { request ->
@@ -95,7 +84,7 @@ val app: HttpHandler =
                 contracts[contract.id] = revisedContract
 
                 println("Service contracts agreed = $revisedContract")
-                Response(OK).with(serviceContractLens of contract)
+                Response(NO_CONTENT).with(serviceContractLens of contract)
             }
         },
     )

@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: Sample openAPI specifications for service contract synchronization among households
+  version: 1.0.0
+tags:
+  - name: service contract
+    description: Everything about your service contracts
+paths:
+  /contract/{id}:
+    put:
+      tags:
+        - service contract
+      summary: Create or update a service contract
+      description: Create or update a service contract by Id
+      operationId: createOrUpdateServiceContract
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: household
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: The service contract to be created or updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceContract'
+        required: true
+      responses:
+        '200':
+          description: Service contract updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceContract'
+        '201':
+          description: Service contract created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceContract'
+        '400':
+          description: Failed request validation
+        '403':
+          description: Not authorized
+    get:
+      tags:
+        - service contract
+      summary: Get a service contract
+      description: Get a service contract by Id
+      operationId: getServiceContract
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: household
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceContract'
+        '400':
+          description: Failed request validation
+        '403':
+          description: Not authorized
+        '404':
+          description: Service contract not found
+  /contract/{id}/agreedAt:
+    patch:
+      tags:
+        - service contract
+      summary: Agree with a service contract
+      description: Agree a service contract by Id
+      operationId: agreeServiceContract
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: household
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Agreed service contract
+        '400':
+          description: Failed request validation
+        '403':
+          description: Not authorized
+        '404':
+          description: Service contract not found
+components:
+  schemas:
+    Party:
+      type: object
+      properties:
+        householdName:
+          type: string
+        service:
+          type: string
+        agreedAt:
+          type: string
+          format: date-time
+    ServiceContract:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        partyA:
+          $ref: '#/components/schemas/Party'
+        partyB:
+          $ref: '#/components/schemas/Party'

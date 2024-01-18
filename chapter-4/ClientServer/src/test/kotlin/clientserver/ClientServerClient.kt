@@ -40,7 +40,7 @@ fun main() {
     val contractReceivedByB =
         serviceContractLens(
             printingClient(
-                Request(GET, "http://localhost:9000/contracts/1?household=B"),
+                Request(GET, "http://localhost:9000/contracts/1").with(householdHeader of "B"),
             ),
         )
     println("Household B received the initial service contract of ID ${contractReceivedByB.id}")
@@ -62,30 +62,30 @@ fun main() {
     val contractReceivedByA =
         serviceContractLens(
             printingClient(
-                Request(GET, "http://localhost:9000/contracts/1?household=A"),
+                Request(GET, "http://localhost:9000/contracts/1").with(householdHeader of "A"),
             ),
         )
     println("Household A received the revised service contract of ID ${contractReceivedByA.id}")
 
-    printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").header("household", "A"))
+    printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").with(householdHeader of "A"))
     println("Household A agreed with the service contract of ID ${contractReceivedByA.id}")
 
     val revisedContractReceivedByB =
         serviceContractLens(
             printingClient(
-                Request(GET, "http://localhost:9000/contracts/1?household=B"),
+                Request(GET, "http://localhost:9000/contracts/1").with(householdHeader of "B"),
             ),
         )
     println("Household B received the revised service contract of ID ${revisedContractReceivedByB.id}")
 
     if (revisedContractReceivedByB.partyA.agreedAt != null) {
-        printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").header("household", "B"))
+        printingClient(Request(PATCH, "http://localhost:9000/contracts/1/agreedAt").with(householdHeader of "B"))
         println("Household B agreed with the service contract of ID ${revisedContractReceivedByB.id}")
     }
     val contractAgreedByBoth =
         serviceContractLens(
             printingClient(
-                Request(GET, "http://localhost:9000/contracts/1?household=A"),
+                Request(GET, "http://localhost:9000/contracts/1").with(householdHeader of "A"),
             ),
         )
     println("Household A received the agreed service contract: $contractAgreedByBoth")
