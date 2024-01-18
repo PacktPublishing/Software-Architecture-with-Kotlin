@@ -2,7 +2,6 @@ package clientserver
 
 import clientserver.formats.Party
 import clientserver.formats.ServiceContract
-import clientserver.formats.serviceContractLens
 import org.http4k.client.OkHttp
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
@@ -18,16 +17,13 @@ import org.http4k.format.Jackson.json
 
 fun main() {
     val client: HttpHandler = OkHttp()
-
     val printingClient: HttpHandler = PrintResponse().then(client)
-
     val initialContractDraftedByHouseholdA =
         ServiceContract(
             id = 1,
             partyA = Party("A", "Plumbing"),
             partyB = Party("B", "Cleaning"),
         )
-
     printingClient(
         Request(PUT, "http://localhost:9000/contracts/1").with(
             householdHeader of "A",

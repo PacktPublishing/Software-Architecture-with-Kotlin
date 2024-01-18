@@ -1,11 +1,11 @@
 package clientserver
 
 import clientserver.formats.ServiceContract
-import clientserver.formats.serviceContractLens
 import org.http4k.core.Body
 import org.http4k.core.HttpHandler
-import org.http4k.core.Method
 import org.http4k.core.Method.GET
+import org.http4k.core.Method.PATCH
+import org.http4k.core.Method.PUT
 import org.http4k.core.Response
 import org.http4k.core.Status.Companion.BAD_REQUEST
 import org.http4k.core.Status.Companion.CREATED
@@ -24,7 +24,9 @@ import org.http4k.routing.routes
 import org.http4k.server.Undertow
 import org.http4k.server.asServer
 import java.time.Instant
+import java.util.concurrent.ConcurrentHashMap
 
+val serviceContractLens = Body.auto<ServiceContract>().toLens()
 val householdHeader = Header.required("household")
 
 val app: HttpHandler =
@@ -42,7 +44,7 @@ val app: HttpHandler =
                 Response(OK).with(serviceContractLens of contract)
             }
         },
-        "/contracts/{id}" bind Method.PUT to { request ->
+        "/contracts/{id}" bind PUT to { request ->
             val household = householdHeader(request)
             val lens = Body.auto<ServiceContract>().toLens()
             val id = request.path("id")?.toInt()
@@ -55,15 +57,14 @@ val app: HttpHandler =
             } else if (contract.partyA.householdName != household && contract.partyB.householdName != household) {
                 Response(FORBIDDEN).body("Household $household is not allowed to update the service contract of ID $id")
             } else {
-                val status = if (contracts[contract.id] == null) CREATED else OK
-
-                contracts[contract.id] = contract
+                val previous = contracts.put(contract.id, contract)
+                val status = if (previous == null) CREATED else OK
 
                 println("Number of service contracts stored = ${contracts.size}")
                 Response(status).with(serviceContractLens of contract)
             }
         },
-        "/contracts/{id}/agreedAt" bind Method.PATCH to { request ->
+        "/contracts/{id}/agreedAt" bind PATCH to { request ->
             val household = householdHeader(request)
             val id = request.path("id")?.toInt()
             val contract = id?.let { contracts[id] }
@@ -89,12 +90,10 @@ val app: HttpHandler =
         },
     )
 
-val contracts = mutableMapOf<Int, ServiceContract>()
+val contracts = ConcurrentHashMap<Int, ServiceContract>()
 
 fun main() {
     val printingApp: HttpHandler = PrintRequest().then(app)
-
     val server = printingApp.asServer(Undertow(9000)).start()
-
     println("Server started on " + server.port())
 }
