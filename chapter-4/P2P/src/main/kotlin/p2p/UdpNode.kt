@@ -39,13 +39,8 @@ class UdpNode<T>(
             inbound.rewind()
             val received = convertor.fromBuffer(inbound)
 
-            val transformed = transformer(received)
-
-            transformed?.let { t ->
-                outbound.clear()
-                convertor.toBuffer(t, outbound)
-                outbound.flip()
-                c.send(outbound, address)
+            transformer(received)?.let { transformed ->
+                produce(transformed, address)
             }
         } ?: 0
     }
