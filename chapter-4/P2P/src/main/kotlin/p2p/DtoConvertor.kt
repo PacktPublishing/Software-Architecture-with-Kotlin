@@ -28,59 +28,34 @@ object ServiceContractConvertor : DtoConvertor<ServiceContract> {
         dto: ServiceContract,
         buffer: ByteBuffer,
     ) {
-        buffer.putInt(dto.id)
-        toBuffer(dto.partyA, buffer)
-        toBuffer(dto.partyB, buffer)
+        buffer.putInt(dto.id).putParty(dto.partyA).putParty(dto.partyB)
     }
 
-    private fun toBuffer(
-        dto: Party,
-        buffer: ByteBuffer,
-    ) {
-        toBuffer(dto.householdName, buffer)
-        toBuffer(dto.service, buffer)
+    private fun ByteBuffer.putParty(dto: Party): ByteBuffer = putString(dto.householdName).putString(dto.service).putInstant(dto.agreedAt)
 
-        if (dto.agreedAt == null) {
-            buffer.putChar(ABSENT)
+    private fun ByteBuffer.putInstant(dto: Instant?): ByteBuffer =
+        if (dto == null) {
+            putChar(ABSENT)
         } else {
-            buffer.putChar(PRESENT)
-            buffer.putLong(dto.agreedAt.epochSecond)
+            putChar(PRESENT).putLong(dto.epochSecond)
         }
-    }
 
-    private fun toBuffer(
-        dto: String,
-        buffer: ByteBuffer,
-    ) {
-        buffer.putInt(dto.length)
-        buffer.put(dto.toByteArray())
-    }
+    private fun ByteBuffer.putString(dto: String): ByteBuffer = putInt(dto.length).put(dto.toByteArray())
 
-    override fun fromBuffer(buffer: ByteBuffer): ServiceContract {
-        val id = buffer.getInt()
-        val partyA = partyFromBuffer(buffer)
-        val partyB = partyFromBuffer(buffer)
-        return ServiceContract(id, partyA, partyB)
-    }
+    override fun fromBuffer(buffer: ByteBuffer): ServiceContract = ServiceContract(buffer.getInt(), buffer.getParty(), buffer.getParty())
 
-    private fun partyFromBuffer(buffer: ByteBuffer): Party {
-        val householdName = stringFromBuffer(buffer)
-        val service = stringFromBuffer(buffer)
+    private fun ByteBuffer.getParty(): Party = Party(getString(), getString(), getInstant())
 
-        val agreedAt =
-            if (buffer.getChar() == PRESENT) {
-                Instant.ofEpochSecond(buffer.getLong())
-            } else {
-                null
-            }
+    private fun ByteBuffer.getInstant(): Instant? =
+        if (getChar() == PRESENT) {
+            Instant.ofEpochSecond(getLong())
+        } else {
+            null
+        }
 
-        return Party(householdName, service, agreedAt)
-    }
-
-    private fun stringFromBuffer(buffer: ByteBuffer): String {
-        val len = buffer.getInt()
-        val bytes = ByteArray(len)
-        buffer.get(bytes)
+    private fun ByteBuffer.getString(): String {
+        val bytes = ByteArray(getInt())
+        get(bytes)
         return String(bytes)
     }
 }

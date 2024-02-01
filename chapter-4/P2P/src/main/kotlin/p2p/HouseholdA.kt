@@ -45,11 +45,9 @@ fun main() {
             partyA = Party(HOUSEHOLD_A, PLUMBING, null),
             partyB = Party(HOUSEHOLD_B, CLEANING, null),
         )
-    node.produce(
-        payload =
-        contract,
-        target = InetSocketAddress(HOST_B, PORT_B),
-    ).also { println("submitted the service contract of ID ${contract.id}") }
+    node.produce(contract, InetSocketAddress(HOST_B, PORT_B)).also {
+        println("submitted the service contract of ID ${contract.id}")
+    }
 
     loopForever(1000) { node.consume() }
 }
