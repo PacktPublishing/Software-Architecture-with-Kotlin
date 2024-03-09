@@ -34,6 +34,8 @@ class FirstFragment : Fragment() {
 
         binding.yourHouseholdNextButton.setOnClickListener {
             findNavController().navigate(R.id.your_household_to_your_neighbor)
+
+            println("savedInstanceState=$savedInstanceState")
         }
     }
 
