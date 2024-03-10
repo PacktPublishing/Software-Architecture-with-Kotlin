@@ -20,7 +20,6 @@ class ContractDraftFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
         inflated = inflater.inflate(R.layout.fragment_contract_draft, container, false)
         controller = activity as Controller
 
