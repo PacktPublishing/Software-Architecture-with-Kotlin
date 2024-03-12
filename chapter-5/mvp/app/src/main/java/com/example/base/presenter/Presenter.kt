@@ -4,6 +4,4 @@ import com.example.base.model.DraftContractInput
 
 interface Presenter {
     fun submitContract(contract: DraftContractInput)
-
-    fun findLastSubmittedContract(): DraftContractInput?
 }

@@ -10,7 +10,6 @@ import com.example.base.view.ContractDraftFragment
 
 class MainActivity : AppCompatActivity(), Presenter {
     private val contractRepository: ContractRepository = ContractRepository()
-    private var lastSubmittedContract: DraftContractInput? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,17 +18,14 @@ class MainActivity : AppCompatActivity(), Presenter {
         val contractDraftFragment = ContractDraftFragment()
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, contractDraftFragment).commit()
 
-        contractRepository.onSubmitListener = {
-            lastSubmittedContract = it
-        }
     }
 
     override fun submitContract(contract: DraftContractInput) {
+        contractRepository.onSubmitListener = {
+            val confirmationFragment = ConfirmationFragment()
+            confirmationFragment.lastSubmittedContract = it
+            supportFragmentManager.beginTransaction().replace(R.id.fragment_container, confirmationFragment).commit()
+        }
         contractRepository.submit(contract)
-
-        val confirmationFragment = ConfirmationFragment()
-        supportFragmentManager.beginTransaction().replace(R.id.fragment_container, confirmationFragment).commit()
     }
-
-    override fun findLastSubmittedContract(): DraftContractInput? = lastSubmittedContract
 }

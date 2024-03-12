@@ -8,17 +8,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.example.base.R
+import com.example.base.model.DraftContractInput
 import com.example.base.presenter.Presenter
 
 class ConfirmationFragment : Fragment() {
+    lateinit var lastSubmittedContract: DraftContractInput
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val inflated = inflater.inflate(R.layout.fragment_confirmation, container, false)
-        val presenter = activity as Presenter
 
-        presenter.findLastSubmittedContract()?.also {
+        lastSubmittedContract?.also {
             inflated.findViewById<TextView>(R.id.your_household_summary).text =
                 "Your household \"${it.initiator.householdName}\" providing ${it.initiator.serviceProvided}"
             inflated.findViewById<TextView>(R.id.your_neighbor_summary).text =
