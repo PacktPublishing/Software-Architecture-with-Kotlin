@@ -25,14 +25,7 @@ class MainActivity : AppCompatActivity(), Controller {
     override fun submitContract(contract: DraftContractInput) {
         contractRepository.submit(contract)
 
-        val bundle = Bundle()
-        bundle.putString("yourHouseholdName", contract.initiator.householdName)
-        bundle.putString("yourHouseholdService", contract.initiator.serviceProvided)
-        bundle.putString("yourNeighborName", contract.neighbor.householdName)
-        bundle.putString("yourNeighborService", contract.neighbor.serviceProvided)
-
         val confirmationFragment = ConfirmationFragment()
-        confirmationFragment.arguments = bundle
         supportFragmentManager.beginTransaction().replace(R.id.fragment_container, confirmationFragment).commit()
     }
 }
