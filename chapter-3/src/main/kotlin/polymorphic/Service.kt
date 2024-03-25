@@ -5,17 +5,15 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit.HOURS
 import java.time.temporal.ChronoUnit.MINUTES
 
-interface Household {
+interface Service {
     fun performService(time: Instant)
 
     fun wasServicePerformed(): Boolean
 }
 
-class PlumbingHousehold : Household {
+class Plumbing : Service {
     var startedAt: Instant? = null
-
     var completedAt: Instant? = null
-
     var confirmedAt: Instant? = null
 
     override fun performService(time: Instant) {
@@ -35,9 +33,8 @@ class PlumbingHousehold : Household {
     }
 }
 
-class BabysittingHousehold(val agreedHours: Int) : Household {
+class Babysitting(val agreedHours: Int) : Service {
     var startedAt: Instant? = null
-
     var endedAt: Instant? = null
 
     override fun performService(time: Instant) {
@@ -57,11 +54,9 @@ class BabysittingHousehold(val agreedHours: Int) : Household {
     }
 }
 
-class RoomCleaningHousehold(val agreedRooms: Set<String>) : Household {
+class RoomCleaning(val agreedRooms: Set<String>) : Service {
     var startedAt: Instant? = null
-
     val roomCleaned: MutableSet<String> = mutableSetOf()
-
     var endedAt: Instant? = null
 
     override fun performService(time: Instant) {
@@ -73,7 +68,6 @@ class RoomCleaningHousehold(val agreedRooms: Set<String>) : Household {
         room: String,
     ) {
         roomCleaned.add(room)
-
         if (allAgreedRoomsCleaned()) {
             endedAt = time
         }
@@ -86,30 +80,17 @@ class RoomCleaningHousehold(val agreedRooms: Set<String>) : Household {
 
 fun main() {
     val now = Instant.now()
-
-    val plumbingHousehold = PlumbingHousehold()
-
-    plumbingHousehold.performService(now)
-
-    plumbingHousehold.completeService(now.plus(2, HOURS))
-
-    plumbingHousehold.confirmService(now.plus(2, HOURS).plus(3, MINUTES))
-
-    println("Was plumbing service performed? ${plumbingHousehold.wasServicePerformed()}")
-
-    val babysittingHousehold = BabysittingHousehold(3)
-
-    babysittingHousehold.performService(now)
-
-    babysittingHousehold.endService(now.plus(3, HOURS))
-
-    println("Was babysitting service performed? ${babysittingHousehold.wasServicePerformed()}")
-
-    val roomCleaningHousehold = RoomCleaningHousehold(setOf("Kitchen", "Bathroom"))
-
-    roomCleaningHousehold.performService(now)
-
-    roomCleaningHousehold.cleaned(now.plus(3, HOURS), "Kitchen")
-
-    println("Was room cleaning service performed? ${roomCleaningHousehold.wasServicePerformed()}")
+    val plumbing = Plumbing()
+    plumbing.performService(now)
+    plumbing.completeService(now.plus(2, HOURS))
+    plumbing.confirmService(now.plus(2, HOURS).plus(3, MINUTES))
+    println("Was plumbing service performed? ${plumbing.wasServicePerformed()}")
+    val babysitting = Babysitting(3)
+    babysitting.performService(now)
+    babysitting.endService(now.plus(3, HOURS))
+    println("Was babysitting service performed? ${babysitting.wasServicePerformed()}")
+    val roomCleaning = RoomCleaning(setOf("Kitchen", "Bathroom"))
+    roomCleaning.performService(now)
+    roomCleaning.cleaned(now.plus(3, HOURS), "Kitchen")
+    println("Was room cleaning service performed? ${roomCleaning.wasServicePerformed()}")
 }
