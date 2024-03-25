@@ -14,18 +14,8 @@ sealed class Service {
 
     fun wasServicePerformed(): Boolean {
         return when (this) {
-            is Babysitting -> {
-                if (startedAt == null || endedAt == null) {
-                    false
-                } else {
-                    Duration.between(startedAt, endedAt).toHours() >= agreedHours
-                }
-            }
-
-            is Plumbing -> {
-                startedAt != null && completedAt != null && confirmedAt != null
-            }
-
+            is Babysitting -> durationCoversAgreedHours()
+            is Plumbing -> areAllDatesPresent()
             is RoomCleaning -> allAgreedRoomsCleaned()
         }
     }
@@ -43,6 +33,10 @@ class Plumbing : Service() {
     fun confirmService(time: Instant) {
         confirmedAt = time
     }
+
+    internal fun areAllDatesPresent(): Boolean {
+        return startedAt != null && completedAt != null && confirmedAt != null
+    }
 }
 
 class Babysitting(val agreedHours: Int) : Service() {
@@ -50,6 +44,14 @@ class Babysitting(val agreedHours: Int) : Service() {
 
     fun endService(time: Instant) {
         endedAt = time
+    }
+
+    internal fun durationCoversAgreedHours(): Boolean {
+        return if (startedAt == null || endedAt == null) {
+            false
+        } else {
+            Duration.between(startedAt, endedAt).toHours() >= agreedHours
+        }
     }
 }
 
