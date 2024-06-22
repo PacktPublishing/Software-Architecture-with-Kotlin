@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 class ConnectTest {
     @Test
-    fun `Ping test`() {
+    fun `Get the household from Household API`() {
         assertEquals(
             Response(OK)
                 .contentType(ContentType.APPLICATION_JSON)
