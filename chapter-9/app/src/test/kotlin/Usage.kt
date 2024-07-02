@@ -3,6 +3,9 @@ import java.util.UUID
 
 fun main() {
     val contractId = UUID.randomUUID()
+    val eventStore = EventStore<UUID, ContractEvent>()
+    val type = "Contract"
+
     val createdEvent = ContractDraftedEvent(
         contractId = contractId,
         time = Instant.now(),
@@ -31,13 +34,14 @@ fun main() {
         time = Instant.now(),
         agreedByHousehold = "HouseholdB"
     )
-    val events = listOf(
+
+    listOf(
         createdEvent,
         amendedEvent,
         agreedEventByHouseholdA,
         agreedEventByHouseholdB
-    )
+    ).forEach { eventStore.append(contractId, it) }
 
-    val aggregate = events.play()
+    val aggregate = eventStore.get(contractId)?.play()
     println("Aggregate is of version: ${aggregate?.version}")
 }
