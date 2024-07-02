@@ -92,6 +92,6 @@ fun cqrsUsage() {
         onFailure = { println("Failed to amend contract: $contractId")}
     )
 
-    val aggregate = eventStore.get(contractId!!)?.play()
+    val aggregate = CurrentContractQuery(contractId!!).handle(eventStore)
     println("Aggregate is of version: ${aggregate?.version}")
 }
