@@ -2,9 +2,13 @@ import java.time.Instant
 import java.util.UUID
 
 fun main() {
+    /*eventSourceUsage()*/
+    cqrsUsage()
+}
+
+fun eventSourceUsage() {
     val contractId = UUID.randomUUID()
     val eventStore = EventStore<UUID, ContractEvent>()
-    val type = "Contract"
 
     val createdEvent = ContractDraftedEvent(
         contractId = contractId,
@@ -43,5 +47,51 @@ fun main() {
     ).forEach { eventStore.append(contractId, it) }
 
     val aggregate = eventStore.get(contractId)?.play()
+    println("Aggregate is of version: ${aggregate?.version}")
+}
+
+fun cqrsUsage() {
+    var contractId: UUID? = null
+    val eventStore = EventStore<UUID, ContractEvent>()
+
+    DraftContractCommand(
+        draftedByHousehold = "HouseholdA",
+        counterpartHousehold = "HouseholdB",
+        serviceProvided = "Cleaning",
+        serviceReceived = "Babysitting"
+    ).handle(
+        eventStore = eventStore,
+        onSuccess = { contractId = it.contractId
+            println("Contract drafted: $contractId") },
+        onFailure = { "Failed to draft contract: $it"}
+    )
+
+    AmendContractCommand(
+        contractId = contractId!!,
+        amendedByHousehold = "HouseholdB",
+        serviceReceivedUpdate = "Dish washing",
+        serviceProvidedUpdate = null
+    ).handle(eventStore = eventStore,
+        onSuccess = { println("Contract amended: $contractId") },
+        onFailure = { println("Failed to amend contract: $contractId")}
+    )
+
+    AgreeContractCommand(
+        contractId = contractId!!,
+        agreedByHousehold = "HouseholdA"
+    ).handle(eventStore = eventStore,
+        onSuccess = { println("Contract agreed: $contractId") },
+        onFailure = { println("Failed to amend contract: $contractId")}
+    )
+
+    AgreeContractCommand(
+        contractId = contractId!!,
+        agreedByHousehold = "HouseholdB"
+    ).handle(eventStore = eventStore,
+        onSuccess = { println("Contract agreed: $contractId") },
+        onFailure = { println("Failed to amend contract: $contractId")}
+    )
+
+    val aggregate = eventStore.get(contractId!!)?.play()
     println("Aggregate is of version: ${aggregate?.version}")
 }
