@@ -1,12 +1,11 @@
-import java.util.UUID
-import java.util.function.BiFunction
 
-class EventStore<KEY, AGGREGATE> {
-    private val aggregatesByKey = mutableMapOf<KEY, List<AGGREGATE>>()
-
-    fun append(id: KEY, payload: AGGREGATE) {
-        aggregatesByKey.merge(id, listOf(payload)) { t1, t2 -> t1 + t2 }
+class EventStore<K, E> {
+    private val eventsByKey = mutableMapOf<K, List<E>>()
+    fun append(id: K, payload: E) {
+        eventsByKey.merge(id, listOf(payload)) { t1, t2 -> t1 + t2 }
     }
-
-    fun get(id: KEY): List<AGGREGATE>? = aggregatesByKey[id]
+    fun get(id: K): List<E>? = eventsByKey[id]
+    fun get(predicate: (E) -> Boolean): List<E> = eventsByKey.flatMap {
+        it.value.filter(predicate)
+    }
 }

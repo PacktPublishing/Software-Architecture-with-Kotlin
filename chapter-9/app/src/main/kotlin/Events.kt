@@ -95,20 +95,12 @@ fun ContractAgreedEvent.play(current: Contract): Contract {
 }
 
 fun <T : ContractEvent> T.validate(current: Contract, expectedHouseholdName: String): T {
-    require(contractId == current.id) {
-        "Aggregate ID mismatch - expected: $contractId, was ${current.id}"
-    }
-    require(targetVersion == current.version + 1) {
-        "Unexpected version - expected: ${targetVersion - 1}, was ${current.version}"
-    }
+    require(contractId == current.id)
+    require(targetVersion == current.version + 1)
     require(
         expectedHouseholdName == current.partyA.householdName ||
             expectedHouseholdName == current.partyB.householdName
-    ) {
-        "Unexpected household - expected: ${expectedHouseholdName}, was ${
-            listOf(current.partyA.householdName, current.partyB.householdName)
-        }"
-    }
+    )
     return this
 }
 

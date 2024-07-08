@@ -94,4 +94,7 @@ fun cqrsUsage() {
 
     val aggregate = CurrentContractQuery(contractId!!).handle(eventStore)
     println("Aggregate is of version: ${aggregate?.version}")
+
+    val summary = MyHouseholdSummaryQuery("HouseholdA").handle(eventStore)
+    println("Summary: $summary")
 }
