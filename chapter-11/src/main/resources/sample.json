@@ -1,0 +1,11 @@
+{
+  "@timestamp": "2024-08-20T12:16:20.898527+01:00",
+  "@version": "1",
+  "message": "Created a new household 'Whittington'",
+  "logger_name": "org.example.household.HouseholdRepository",
+  "thread_name": "main",
+  "level": "INFO",
+  "level_value": 20000,
+  "session": "57fa4035-0390-406c-9f2b-7dfcfc131d5a",
+  "householdName": "Whittington"
+}

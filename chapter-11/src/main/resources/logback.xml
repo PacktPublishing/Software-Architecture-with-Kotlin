@@ -1,0 +1,24 @@
+<configuration>
+    <appender name="plainText" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="plainTextWithMdc" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} MDC=%X{session} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="structuredAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="plainText" />
+        <appender-ref ref="plainTextWithMdc" />
+        <appender-ref ref="structuredAppender" />
+    </root>
+</configuration>
