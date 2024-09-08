@@ -1,17 +1,14 @@
-package com.example.base.presenter
+package com.example.base.viewmodel
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import com.example.base.R
 import com.example.base.model.ContractRepository
 import com.example.base.model.DraftContractInput
 import com.example.base.view.ConfirmationFragment
 import com.example.base.view.ContractDraftFragment
-import com.example.base.viewmodel.DraftContractViewModel
 
-class MainActivity : AppCompatActivity(), Presenter {
+class MainActivity : AppCompatActivity(), Command {
     private val contractRepository: ContractRepository = ContractRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {

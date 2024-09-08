@@ -12,7 +12,7 @@
         android:theme="@style/Theme.Base"
         tools:targetApi="31">
         <activity
-            android:name=".presenter.MainActivity"
+            android:name=".viewmodel.MainActivity"
             android:label="Draft contract"
             android:exported="true" >
             <intent-filter>

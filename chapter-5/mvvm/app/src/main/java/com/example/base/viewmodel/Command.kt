@@ -1,7 +1,7 @@
-package com.example.base.presenter
+package com.example.base.viewmodel
 
 import com.example.base.model.DraftContractInput
 
-interface Presenter {
+interface Command {
     fun submitContract(contract: DraftContractInput)
 }

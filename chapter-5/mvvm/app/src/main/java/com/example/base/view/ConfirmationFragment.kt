@@ -5,13 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.R
-import com.example.base.model.DraftContractInput
-import com.example.base.presenter.Presenter
 import com.example.base.viewmodel.DraftContractViewModel
 
 class ConfirmationFragment : Fragment() {

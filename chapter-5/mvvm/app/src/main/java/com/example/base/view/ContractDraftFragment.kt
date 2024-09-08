@@ -11,7 +11,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.base.R
-import com.example.base.presenter.Presenter
+import com.example.base.viewmodel.Command
 import com.example.base.viewmodel.DraftContractViewModel
 import com.example.base.viewmodel.toModel
 
@@ -21,12 +21,12 @@ class ContractDraftFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val inflated = inflater.inflate(R.layout.fragment_contract_draft, container, false)
-        val presenter = activity as Presenter
+        val command = activity as Command
         val viewModel = ViewModelProvider(activity as AppCompatActivity).get(DraftContractViewModel::class.java)
         inflated.findViewById<Button>(R.id.submit_button)
             ?.setOnClickListener {
                 viewModel.toModel()?.let {
-                    presenter.submitContract(it)
+                    command.submitContract(it)
                 }
             }
         inflated.findViewById<EditText>(R.id.your_household_name_edit)?.bind {
