@@ -1,7 +1,6 @@
 package adapter.rest
 
 import core.Contract
-import core.ContractState
 import core.port.ContractService
 import core.port.HouseholdRepository
 import org.springframework.http.HttpStatus
@@ -35,15 +34,15 @@ class ContractController(
                 request.serviceProvidedByHouseholdA,
                 request.serviceProvidedByHouseholdB,
             )
-        return ResponseEntity(contract.toDto(ContractState.DRAFTED.name), HttpStatus.CREATED)
+        return ResponseEntity(contract.toDto(), HttpStatus.CREATED)
     }
 }
 
-fun Contract.toDto(state: String): ContractDto =
+fun Contract.toDto(): ContractDto =
     ContractDto(
         partyA.household.name,
         partyB.household.name,
         this.partyA.serviceProvided,
         this.partyB.serviceProvided,
-        state,
+        this.contractState.name,
     )
