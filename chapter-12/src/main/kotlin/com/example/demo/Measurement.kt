@@ -23,3 +23,10 @@ fun measureTotalTimeElapsed(
     measureTimeMillis {
         repeat(iterations, operation)
     }
+
+inline fun <T> measureTime(block: () -> T): T {
+    val start = System.nanoTime()
+    val result = block()
+    val timeTaken = System.nanoTime() - start
+    return result.also { println("taken: $timeTaken") }
+}

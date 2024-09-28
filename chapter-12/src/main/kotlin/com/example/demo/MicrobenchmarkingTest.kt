@@ -7,26 +7,27 @@ import org.openjdk.jmh.annotations.Scope
 import org.openjdk.jmh.annotations.Setup
 import org.openjdk.jmh.annotations.State
 import org.openjdk.jmh.annotations.Warmup
+import java.util.UUID
 import java.util.concurrent.TimeUnit
-import kotlin.math.cos
-import kotlin.math.sqrt
-import kotlin.random.Random
 
 @State(Scope.Benchmark)
 @Fork(1)
 @Warmup(iterations = 10)
-@Measurement(iterations = 10, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 20, time = 1, timeUnit = TimeUnit.MILLISECONDS)
 class MicrobenchmarkingTest {
-    private var data = 0.0
+    private var data = emptyList<UUID>()
 
     @Setup
     fun setUp() {
-        data = Random.nextDouble()
+        data = (1..2).map { UUID.randomUUID() }
     }
 
     @Benchmark
-    fun sqrtBenchmark(): Double = sqrt(data)
+    fun combineUUIDBenchmark(): UUID = data.reduce { one, two -> one + two }
 
-    @Benchmark
-    fun cosBenchmark(): Double = cos(data)
+    private operator fun UUID.plus(another: UUID): UUID {
+        val mostSignificant = mostSignificantBits xor another.mostSignificantBits
+        val leastSignficant = leastSignificantBits xor another.leastSignificantBits
+        return UUID(mostSignificant, leastSignficant)
+    }
 }

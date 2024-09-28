@@ -22,12 +22,13 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("org.jetbrains.kotlinx:kotlinx-benchmark-runtime:0.4.11")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 }
 
 kotlin {
@@ -46,17 +47,6 @@ benchmark {
     }
     configurations {
         named("main") {
-            warmups = 20
-            iterations = 10
-            iterationTime = 3
-            iterationTimeUnit = "s"
-        }
-        register("smoke") {
-            include("<pattern of fully qualified name>")
-            warmups = 5
-            iterations = 3
-            iterationTime = 500
-            iterationTimeUnit = "ms"
         }
     }
 }
