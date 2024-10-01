@@ -1,0 +1,66 @@
+openapi: "3.0.2"
+info:
+  title: Household API
+  version: "1.0"
+servers:
+  - url: https://localhost/household
+paths:
+  /v1/household/{id}:
+    post:
+      tags:
+        - Household
+      operationId: createHousehold
+      parameters:
+        - $ref: "#/components/parameters/HouseholdId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HouseholdV1"
+      responses:
+        "201":
+          description: Household created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HouseholdV1"
+        "400":
+          description: Failed validation check
+        "409":
+          description: Household already existed
+    get:
+      tags:
+        - Household
+      operationId: getHousehold
+      parameters:
+        - $ref: "#/components/parameters/HouseholdId"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HouseholdV1"
+        "404":
+          description: Household record not found
+components:
+  schemas:
+    HouseholdV1:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+  parameters:
+    HouseholdId:
+      in: path
+      name: householdId
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: UUID of the household record

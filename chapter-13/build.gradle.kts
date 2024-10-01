@@ -1,11 +1,12 @@
 plugins {
-    kotlin("jvm") version "1.9.23"
+    application
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.openapi)
+    alias(libs.plugins.ktor)
 }
 
 group = "com"
 version = "1.0-SNAPSHOT"
-val kotestVersion = "5.9.1"
-val mockkVersion = "1.13.12"
 
 repositories {
     mavenCentral()
@@ -13,10 +14,11 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-framework-datatest:$kotestVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation(libs.bundles.kotest)
+    testImplementation(libs.bundles.ktor.client)
+    testImplementation(libs.mockk)
+    testImplementation(libs.moshi)
+    implementation(libs.bundles.ktor.server)
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
@@ -25,4 +27,32 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+}
+
+sourceSets {
+    test {
+        kotlin {
+            srcDirs("build/generated-sources/api/src/main/kotlin")
+        }
+    }
+}
+
+openApiValidate {
+    inputSpec.set("$rootDir/src/main/resources/openapi.yaml")
+}
+openApiGenerate {
+    inputSpec.set("$rootDir/src/main/resources/openapi.yaml")
+    outputDir.set("$rootDir/build/generated-sources/api")
+    generatorName.set("kotlin")
+    library.set("jvm-ktor")
+    apiPackage.set("example.api")
+    invokerPackage.set("example.invoker")
+    modelPackage.set("example.model")
+}
+tasks.compileKotlin {
+    dependsOn(tasks.openApiValidate, tasks.openApiGenerate)
+}
+
+application {
+    mainClass.set("example.server.ApplicationKt")
 }

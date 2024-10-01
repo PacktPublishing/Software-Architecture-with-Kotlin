@@ -1,0 +1,30 @@
+[versions]
+openapi = "7.8.0"
+kotest = "5.9.1"
+kotlin = "1.9.23"
+ktor = "2.3.12"
+mockk = "1.13.12"
+moshi = "1.15.1"
+
+[libraries]
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
+kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
+ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
+
+[bundles]
+kotest = ["kotest-assertions-core", "kotest-datatest", "kotest-junit", "kotest-property"]
+ktor-client = ["ktor-client-content-negotiation", "ktor-client-core"]
+ktor-server = ["ktor-server-content-negotiation", "ktor-server-core", "ktor-server-netty"]
+
+[plugins]
+openapi = { id = "org.openapi.generator", version.ref = "openapi" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
