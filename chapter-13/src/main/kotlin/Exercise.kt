@@ -52,7 +52,6 @@ class ExerciseFileLog(
         try {
             val utcDateTime = time.atZone(utc).toLocalDateTime()
             val text = "$utcDateTime: $exercise\n"
-            print(text)
             file.appendText(text)
         } catch (e: IOException) {
             println("error writing to the file: $file")
