@@ -13,6 +13,8 @@ kotest-junit = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotes
 kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-serization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
@@ -21,8 +23,9 @@ moshi = { module = "com.squareup.moshi:moshi", version.ref = "moshi" }
 
 [bundles]
 kotest = ["kotest-assertions-core", "kotest-datatest", "kotest-junit", "kotest-property"]
-ktor-client = ["ktor-client-content-negotiation", "ktor-client-core"]
-ktor-server = ["ktor-server-content-negotiation", "ktor-server-core", "ktor-server-netty"]
+ktor-client = ["ktor-client-content-negotiation", "ktor-client-core", "ktor-client-okhttp", "ktor-serization"]
+ktor-server = ["ktor-server-content-negotiation", "ktor-server-core", "ktor-server-netty", "ktor-serization"]
+moshi = ["moshi"]
 
 [plugins]
 openapi = { id = "org.openapi.generator", version.ref = "openapi" }

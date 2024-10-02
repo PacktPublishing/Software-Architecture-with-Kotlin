@@ -17,7 +17,7 @@ dependencies {
     testImplementation(libs.bundles.kotest)
     testImplementation(libs.bundles.ktor.client)
     testImplementation(libs.mockk)
-    testImplementation(libs.moshi)
+    implementation(libs.bundles.moshi)
     implementation(libs.bundles.ktor.server)
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 }

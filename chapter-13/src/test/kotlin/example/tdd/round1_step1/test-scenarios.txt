@@ -1,0 +1,3 @@
+fail to create household of empty surname
+successfully create a household
+fail to create household if surname already exists
