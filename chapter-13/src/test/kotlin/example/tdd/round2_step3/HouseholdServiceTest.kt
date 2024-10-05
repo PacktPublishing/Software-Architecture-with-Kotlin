@@ -1,7 +1,7 @@
-package example.tdd.round2_step2
+package example.tdd.round2_step3
 
-import example.tdd.round2_step2.Result.Failure
-import example.tdd.round2_step2.Result.Success
+import example.tdd.round2_step3.Result.Failure
+import example.tdd.round2_step3.Result.Success
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
