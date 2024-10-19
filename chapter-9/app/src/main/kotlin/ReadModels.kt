@@ -19,14 +19,14 @@ data class ContractWithOthers(
 
 fun ContractDraftedEvent.playAsSummary(summary: MyHouseholdSummary): MyHouseholdSummary {
     require (summary.householdName == draftedByHousehold ||
-        summary.householdName == counterpartHousehold)
+        summary.householdName == counterpartyHousehold)
     require(summary.contractsWithOthers.containsKey(contractId).not())
 
     val contract = if (summary.householdName == draftedByHousehold) {
         ContractWithOthers(
                 contractId = contractId,
                 version = targetVersion,
-                householdName = counterpartHousehold,
+                householdName = counterpartyHousehold,
                 serviceProvided = serviceProvided,
                 serviceReceived = serviceReceived,
                 draftedAt = time,
@@ -35,7 +35,7 @@ fun ContractDraftedEvent.playAsSummary(summary: MyHouseholdSummary): MyHousehold
         ContractWithOthers(
                 contractId = contractId,
                 version = targetVersion,
-                householdName = counterpartHousehold,
+                householdName = counterpartyHousehold,
                 serviceProvided = serviceReceived,
                 serviceReceived = serviceProvided,
                 draftedAt = time,
@@ -107,7 +107,7 @@ fun MyHouseholdSummaryQuery.handle(
 ): MyHouseholdSummary = eventStore.get { event ->
     when (event) {
         is ContractDraftedEvent -> event.draftedByHousehold == householdName ||
-            event.counterpartHousehold == householdName
+            event.counterpartyHousehold == householdName
         is ContractAmendedEvent -> event.amendedByHousehold == householdName
         is ContractAgreedEvent -> event.agreedByHousehold == householdName
         else -> false

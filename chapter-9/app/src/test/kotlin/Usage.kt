@@ -14,7 +14,7 @@ fun eventSourceUsage() {
         contractId = contractId,
         time = Instant.now(),
         draftedByHousehold = "HouseholdA",
-        counterpartHousehold = "HouseholdB",
+        counterpartyHousehold = "HouseholdB",
         serviceProvided = "Cleaning",
         serviceReceived = "Babysitting"
     )

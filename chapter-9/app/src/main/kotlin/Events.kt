@@ -12,7 +12,7 @@ data class ContractDraftedEvent(
     override val targetVersion: Int = 0,
     override val time: Instant,
     val draftedByHousehold: String,
-    val counterpartHousehold: String,
+    val counterpartyHousehold: String,
     val serviceProvided: String,
     val serviceReceived: String,
 ) : ContractEvent
@@ -43,7 +43,7 @@ fun ContractDraftedEvent.play(): Contract = Contract(
         serviceProvided = serviceProvided
     ),
     partyB = Party(
-        householdName = counterpartHousehold,
+        householdName = counterpartyHousehold,
         serviceProvided = serviceReceived
     )
 )

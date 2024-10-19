@@ -38,7 +38,7 @@ fun DraftContractCommand.handle(
             contractId = UUID.randomUUID(),
             time = Instant.now(),
             draftedByHousehold = draftedByHousehold,
-            counterpartHousehold = counterpartHousehold,
+            counterpartyHousehold = counterpartHousehold,
             serviceReceived = serviceReceived,
             serviceProvided = serviceProvided
         ).also{
