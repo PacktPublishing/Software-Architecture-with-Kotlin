@@ -32,8 +32,8 @@ class ExerciseExecutorIntegrationTest :
 
             FileReader(file).readLines() shouldBe
                 listOf(
-                    "${now.atZone(utc).toLocalDateTime()}: $GoToGym",
-                    "${fourHoursLater.atZone(utc).toLocalDateTime()}: $RunInThePark",
+                    "${now.atZone(utc).toLocalDateTime()}: GoToGym",
+                    "${fourHoursLater.atZone(utc).toLocalDateTime()}: RunInThePark",
                 )
         }
     })
