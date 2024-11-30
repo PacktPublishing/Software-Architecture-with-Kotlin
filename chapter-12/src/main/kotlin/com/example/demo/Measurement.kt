@@ -1,4 +1,4 @@
-package demo
+package com.example.demo
 
 import kotlin.system.measureTimeMillis
 import kotlin.time.measureTimedValue

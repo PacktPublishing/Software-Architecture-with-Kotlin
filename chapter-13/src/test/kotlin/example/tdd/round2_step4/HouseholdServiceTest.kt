@@ -3,8 +3,6 @@ package example.tdd.round2_step4
 import example.tdd.round2_step4.Result.Failure
 import example.tdd.round2_step4.Result.Success
 import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.core.spec.style.FunSpec
-import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
 import io.kotest.property.arbitrary.next

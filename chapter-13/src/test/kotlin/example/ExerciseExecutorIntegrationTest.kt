@@ -1,7 +1,5 @@
 package example
 
-import example.Exercise.GoToGym
-import example.Exercise.RunInThePark
 import example.Weather.CLOUDY
 import example.Weather.RAINY
 import io.kotest.core.spec.style.StringSpec
@@ -11,9 +9,6 @@ import java.io.FileReader
 import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit.HOURS
-
-fun main() {
-}
 
 class ExerciseExecutorIntegrationTest :
     StringSpec({
